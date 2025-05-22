@@ -42,7 +42,7 @@ const Signin = () => {
           const user = userCredential.user;
 
           if (user.emailVerified) {
-            navigate('/home')
+            navigate('/')
           }
           else {
             toast.error("Please varify your email")
