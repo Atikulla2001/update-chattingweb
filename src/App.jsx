@@ -7,6 +7,8 @@ import N404 from './pages/N404';
 import Signup from './pages/Signup'
 import Signin from './pages/Signin';
 import Home from './pages/Home';
+import Message from './pages/Message';
+import Rootlayout from './components/Rootlayout';
 
 
 
@@ -14,26 +16,35 @@ import Home from './pages/Home';
 
 const router = createBrowserRouter([
   {
-    path: "/home",
-    element: <Home />
-  },
-
-  {
     path: "/",
-    element: <Signin />,
+    Component: Rootlayout,
+    children: [
+      { index: true, Component: Home },
+      { path: "message", Component: Message },
+
+
+    ],
   },
   {
     path: "*",
-    element: <N404 />
+    Component: N404
   },
   {
-    path: "signup",
-    element: <Signup />
+    path: "/signup",
+    Component: Signup
   },
   {
-    path: "signin",
-    element: <Signin />
-  }
+    path: "/signin",
+    Component: Signin
+  },
+  {
+    path: "/home",
+    Component: Home
+  },
+  {
+    path: "/message",
+    Component: Message
+  },
 ]);
 
 
