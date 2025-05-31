@@ -9,9 +9,14 @@ import {
   updateProfile
 } from "firebase/auth";
 
+import { useSelector } from 'react-redux';
+
 
 
 const Signup = () => {
+
+  const dataa = useSelector((state) => state.logininformation)
+  console.log(dataa)
 
   const auth = getAuth();
 

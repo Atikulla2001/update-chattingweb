@@ -3,8 +3,14 @@ import { Link } from 'react-router'
 import toast, { Toaster } from 'react-hot-toast';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { userlogininformation } from '../slices/Userslice';
 
 const Signin = () => {
+
+  const dispatch = useDispatch()
+
+
   const auth = getAuth();
   const [data, setData] = useState({
     email: "",
@@ -42,6 +48,8 @@ const Signin = () => {
           const user = userCredential.user;
 
           if (user.emailVerified) {
+            dispatch(userlogininformation(user))
+            localStorage.setItem("login", JSON.stringify(user))
             navigate('/')
           }
           else {
