@@ -91,7 +91,7 @@ const Signup = () => {
                 photoURL: "https://example.com/jane-q-user/profile.jpg"
               }).then(() => {
                 const user = userCredential.user;
-                navigate("/")
+                navigate("/signin")
                 console.log(user)
 
               }).catch((error) => {

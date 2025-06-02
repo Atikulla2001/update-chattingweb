@@ -1,10 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { auth } from '../../firebase.config';
+
+
+
+const initialState = {
+    value: auth,
+}
 
 export const userSlice = createSlice({
     name: 'user',
-    initialState: {
-        value: localStorage.getItem("login") ? JSON.parse(localStorage.getItem("login")) : 0,
-    },
+    initialState,
     reducers: {
         userlogininformation: (state, action) => {
             state.value = action.payload
@@ -17,3 +22,9 @@ export const userSlice = createSlice({
 export const { userlogininformation } = userSlice.actions
 
 export default userSlice.reducer
+
+//  name: 'user',
+//     initialState: {
+//         value: 0,
+
+//     },

@@ -1,6 +1,50 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { userlogininformation } from '../slices/Userslice';
+import { useNavigate } from 'react-router';
+
 
 const Sidebar = () => {
+
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const auth = getAuth()
+    console.log(auth)
+
+    const data = useSelector((state) => state.logininformation.value)
+    console.log(data)
+
+
+    useEffect(() => {
+        const auth = getAuth();
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                dispatch(userlogininformation({
+                    name: user.displayName,
+                    email: user.email,
+                    uid: user.uid
+                }))
+            } else {
+                dispatch(userlogininformation(null))
+                navigate("/Signin")
+            }
+        });
+    }, [dispatch])
+
+    const handlelogout = () => {
+        signOut(auth).then(() => {
+            // Sign-out successful.
+            navigate("/Signin")
+        }).catch((error) => {
+            // An error happened.
+            alert("abcde")
+        });
+
+    }
+
+
+
     return (
         <div className="relative flex h-[calc(100vh-20rem)] w-full max-w-[20rem] flex-col rounded-xl bg-white bg-clip-border p-4 text-gray-700 shadow-xl shadow-blue-gray-900/5">
             <div className="p-4 mb-2">
@@ -8,6 +52,7 @@ const Sidebar = () => {
                     Sidebar
                 </h5>
             </div>
+
             <nav className="flex min-w-[240px] flex-col gap-1 p-2 font-sans text-base font-normal text-blue-gray-700">
                 <div
                     role="button"
@@ -30,6 +75,7 @@ const Sidebar = () => {
                     </div>
                     Dashboard
                 </div>
+
                 <div
                     role="button"
                     className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
@@ -51,6 +97,7 @@ const Sidebar = () => {
                     </div>
                     E-Commerce
                 </div>
+
                 <div
                     role="button"
                     className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
@@ -77,6 +124,7 @@ const Sidebar = () => {
                         </div>
                     </div>
                 </div>
+
                 <div
                     role="button"
                     className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
@@ -98,6 +146,7 @@ const Sidebar = () => {
                     </div>
                     Profile
                 </div>
+
                 <div
                     role="button"
                     className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
@@ -119,9 +168,10 @@ const Sidebar = () => {
                     </div>
                     Settings
                 </div>
-                <div
+
+                <button onClick={handlelogout}
                     role="button"
-                    className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
+                    className="cursor-pointer flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
                 >
                     <div className="grid mr-4 place-items-center">
                         <svg
@@ -139,7 +189,7 @@ const Sidebar = () => {
                         </svg>
                     </div>
                     Log Out
-                </div>
+                </button>
             </nav>
         </div>
     )

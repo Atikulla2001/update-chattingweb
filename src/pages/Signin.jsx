@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router'
 import toast, { Toaster } from 'react-hot-toast';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, } from "firebase/auth";
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { userlogininformation } from '../slices/Userslice';
@@ -9,6 +9,7 @@ import { userlogininformation } from '../slices/Userslice';
 const Signin = () => {
 
   const dispatch = useDispatch()
+  const provider = new GoogleAuthProvider();
 
 
   const auth = getAuth();
@@ -48,7 +49,7 @@ const Signin = () => {
           const user = userCredential.user;
 
           if (user.emailVerified) {
-            dispatch(userlogininformation(user))
+
             localStorage.setItem("login", JSON.stringify(user))
             navigate('/')
           }
@@ -88,6 +89,27 @@ const Signin = () => {
   }
 
   // close code //
+
+
+  const handlegooglelogin = (e) => {
+    e.preventDefault()
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        const user = result.user;
+        dispatch(userlogininformation(user))
+        navigate('/')
+
+      }).catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        console.log(errorCode)
+      });
+  }
 
 
 
@@ -176,6 +198,16 @@ const Signin = () => {
               >
                 Log In
               </button>
+
+              <button
+                onClick={handlegooglelogin}
+                type="submit"
+                className=" text-black  hover:bg-primary-700 font-medium rounded-lg text-sm px-5 py-2.5 mx-25 
+                hover:scale-110 transition duration-500 ease-in-out "
+              >
+                Sign in with google
+              </button>
+
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Don’t have an account yet?{" "}
                 <Link
