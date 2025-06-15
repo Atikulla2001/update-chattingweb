@@ -9,6 +9,8 @@ import {
   updateProfile
 } from "firebase/auth";
 
+import { getDatabase, ref, set } from "firebase/database";
+
 import { useSelector } from 'react-redux';
 
 
@@ -28,7 +30,7 @@ const Signup = () => {
     confrimpassword: '',
   });
 
-
+  const db = getDatabase();
 
   const navigate = useNavigate()
 
@@ -91,8 +93,17 @@ const Signup = () => {
                 photoURL: "https://example.com/jane-q-user/profile.jpg"
               }).then(() => {
                 const user = userCredential.user;
-                navigate("/signin")
                 console.log(user)
+
+                set(ref(db, 'userslist/' + user.uid), {
+                  name: user.displayName,
+                  email: user.email,
+
+                }).then(() => {
+                  navigate("/signin")
+                })
+
+
 
               }).catch((error) => {
 

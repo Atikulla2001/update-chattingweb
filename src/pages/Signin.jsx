@@ -5,8 +5,12 @@ import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopu
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { userlogininformation } from '../slices/Userslice';
+import { getDatabase, ref, set } from "firebase/database";
 
 const Signin = () => {
+
+  const db = getDatabase();
+
 
   const dispatch = useDispatch()
   const provider = new GoogleAuthProvider();
@@ -99,8 +103,18 @@ const Signin = () => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
         const user = result.user;
-        dispatch(userlogininformation(user))
-        navigate('/')
+
+
+        set(ref(db, 'userslist/' + user.uid), {
+          name: user.displayName,
+          email: user.email,
+        }).then(() => {
+          dispatch(userlogininformation(user))
+          navigate('/')
+        })
+
+
+
 
       }).catch((error) => {
         // Handle Errors here.
