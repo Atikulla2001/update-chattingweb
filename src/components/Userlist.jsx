@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { getDatabase, ref, onValue } from "firebase/database";
+import { auth } from '../../firebase.config';
 
 
 const Userlist = () => {
@@ -11,7 +12,10 @@ const Userlist = () => {
         onValue(userlistRef, (snapshot) => {
             const array = []
             snapshot.forEach((item) => {
-                array.push(item.val())
+                if (item.key != auth.currentUser.uid) {
+                    array.push(item.val())
+                }
+
             })
             setUserlist(array)
         });
@@ -30,12 +34,12 @@ const Userlist = () => {
                             USER
                         </h3>
 
-                        {/* <a
+                        <a
                             href="#"
                             className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
                         >
                             View all
-                        </a> */}
+                        </a>
 
                     </div>
                     <div className="flow-root">
@@ -59,7 +63,7 @@ const Userlist = () => {
                                                     {item.name}
                                                 </p>
                                                 <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                                                   {item.email}
+                                                    {item.email}
                                                 </p>
                                             </div>
 
