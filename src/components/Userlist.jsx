@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { getDatabase, ref, onValue } from "firebase/database";
 import { auth } from '../../firebase.config';
+import { IoPersonAddOutline } from "react-icons/io5";
+import  Creative  from '/src/assets/creative.png'
 
 
 const Userlist = () => {
@@ -54,7 +56,8 @@ const Userlist = () => {
                                             <div className="flex-shrink-0">
                                                 <img
                                                     className="w-8 h-8 rounded-full"
-                                                    src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
+                                                    src={Creative}
+                                                    // src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
                                                     alt="Neil image"
                                                 />
                                             </div>
@@ -67,9 +70,9 @@ const Userlist = () => {
                                                 </p>
                                             </div>
 
-                                            {/* <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                                $320
-                                            </div> */}
+                                            <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                                <IoPersonAddOutline className='text-2xl' />
+                                            </div>
 
                                         </div>
                                     </li>
