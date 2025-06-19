@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, set, push } from "firebase/database";
 import { auth } from '../../firebase.config';
 import { IoPersonAddOutline } from "react-icons/io5";
-import  Creative  from '/src/assets/creative.png'
+import Creative from '/src/assets/creative.png'
+import Frequest from './frequest';
 
 
 const Userlist = () => {
@@ -15,7 +16,7 @@ const Userlist = () => {
             const array = []
             snapshot.forEach((item) => {
                 if (item.key != auth.currentUser.uid) {
-                    array.push(item.val())
+                    array.push({ ...item.val(), id: item.key })
                 }
 
             })
@@ -23,6 +24,18 @@ const Userlist = () => {
         });
     }, [])
     console.log(userlist)
+
+
+    const handlefrequest = (item) => {
+        console.log(a)
+        set(push(ref(db, 'frequestlist/')), {
+            sendername: auth.currentUser.displayName,
+            senderid: auth.currentUser.uid,
+            recivername: item.name,
+            reciverid: item.id,
+
+        })
+    }
 
 
     return (
@@ -33,7 +46,7 @@ const Userlist = () => {
                 <div className="p-4 max-w-md bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                     <div className="flex justify-between items-center mb-4">
                         <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
-                            USER
+                            User List
                         </h3>
 
                         <a
@@ -70,9 +83,9 @@ const Userlist = () => {
                                                 </p>
                                             </div>
 
-                                            <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                            <button onClick={() => handlefrequest(item)} className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
                                                 <IoPersonAddOutline className='text-2xl' />
-                                            </div>
+                                            </button>
 
                                         </div>
                                     </li>
