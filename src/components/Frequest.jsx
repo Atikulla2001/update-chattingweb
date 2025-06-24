@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, set, push, remove } from "firebase/database";
 import { auth } from '../../firebase.config';
 import { IoPersonAddOutline } from "react-icons/io5";
 import { FaUserFriends } from "react-icons/fa";
@@ -17,14 +17,24 @@ const Frequest = () => {
         onValue(requestlistRef, (snapshot) => {
             const array = []
             snapshot.forEach((item) => {
-                let array = []
-                array.push(item.val())
+                if (auth.currentUser.uid == item.val().reciverid) {
+                    array.push({ ...item.val(), id: item.key })
+                }
+
             })
             setRequestList(array)
         });
     }, [])
     console.log(requestList)
 
+    const handlefrequestaccept = (item) => {
+        set(push(ref(db, 'friendlist/')), {
+            ...item,
+
+        }).then(() => {
+            remove(ref(db, 'frequestlist/' + item.id));
+        })
+    }
 
 
     return (
@@ -51,8 +61,10 @@ const Frequest = () => {
                             role="list"
                             className="divide-y divide-gray-200 dark:divide-gray-700 h-[400px] overflow-y-scroll pr-10"
                         >
-                            {requestList.map(() => (
-                                <li className="py-3 sm:py-4">
+                            {requestList.map((item) => (
+
+
+                                <li className="py-3 sm:py-4" >
                                     <div className="flex items-center space-x-4">
                                         <div className="flex-shrink-0">
                                             <img
@@ -67,16 +79,20 @@ const Frequest = () => {
                                                 {item.sendername}
                                             </p>
                                             <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                                                dfs
+                                                hfb
                                             </p>
                                         </div>
 
-                                        <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                            <FaUserFriends className='text-2xl' />
-                                        </div>
+                                        <button onClick={() => handlefrequestaccept(item)} className="inline-flex items-center text-base font-semibold p-2 text-white bg-blue-400">
+                                            {/* <FaUserFriends className='text-2xl' /> */}
+                                            Accept
+                                        </button>
 
                                     </div>
                                 </li>
+
+
+
                             ))}
 
 
@@ -85,7 +101,7 @@ const Frequest = () => {
                     </div>
                 </div>
 
-            </div>
+            </div >
         </>
 
     )

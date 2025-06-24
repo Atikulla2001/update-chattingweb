@@ -8,6 +8,7 @@ import Frequest from './frequest';
 
 const Userlist = () => {
     const [userlist, setUserlist] = useState([])
+    const [chakRequestId, setchakRequestId] = useState([])
     const db = getDatabase();
 
     useEffect(() => {
@@ -26,8 +27,26 @@ const Userlist = () => {
     console.log(userlist)
 
 
+
+    // chaklist
+
+    useEffect(() => {
+        const requestlistRef = ref(db, 'frequestlist/');
+        onValue(requestlistRef, (snapshot) => {
+            const array = []
+            snapshot.forEach((item) => {
+                array.push(item.val().senderid + item.val().reciverid)
+
+
+            })
+            setchakRequestId(array)
+        });
+    }, [])
+
+
+
     const handlefrequest = (item) => {
-        console.log(a)
+        console.log(item)
         set(push(ref(db, 'frequestlist/')), {
             sendername: auth.currentUser.displayName,
             senderid: auth.currentUser.uid,
@@ -37,7 +56,7 @@ const Userlist = () => {
         })
     }
 
-
+    console.log(chakRequestId)
     return (
         <>
             {/* component */}
@@ -62,9 +81,10 @@ const Userlist = () => {
                             role="list"
                             className="divide-y divide-gray-200 dark:divide-gray-700 h-[400px] overflow-y-scroll pr-10"
                         >
+
                             {userlist.map((item) => {
                                 return (
-                                    <li className="py-3 sm:py-4">
+                                    <li className="py-3 sm:py-4" >
                                         <div className="flex items-center space-x-4">
                                             <div className="flex-shrink-0">
                                                 <img
@@ -83,23 +103,35 @@ const Userlist = () => {
                                                 </p>
                                             </div>
 
-                                            <button onClick={() => handlefrequest(item)} className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                                <IoPersonAddOutline className='text-2xl' />
-                                            </button>
+                                            {chakRequestId.includes(auth.currentUser.uid + item.id) && 
+                                                chakRequestId.includes(item.id + auth.currentUser.uid)
+                                                ? (
+
+                                                    <button>Cancel</button>
+
+                                                ) : (
+
+                                                    <button onClick={() => handlefrequest(item)} className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                                        <IoPersonAddOutline className='text-2xl' />
+                                                    </button>)
+
+
+                                            }
+
+
 
                                         </div>
                                     </li>
                                 )
-
-
                             })}
+
 
 
                         </ul>
                     </div>
                 </div>
 
-            </div>
+            </div >
         </>
 
     )
